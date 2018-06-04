@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.webkit.WebView;
 
 public class
 MainActivity extends AppCompatActivity {
@@ -13,7 +14,8 @@ MainActivity extends AppCompatActivity {
     private String type = "";
     private String action = "";
     private String intentContent ="";
-    private String packageName = "";
+    private WebView webView;
+    //private String packageName = "";
     int mode = 0;
 
     @Override
@@ -22,6 +24,8 @@ MainActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         Intent intent = getIntent();
         onNewIntent(intent);
+
+
 
         if (action.equals("android.intent.action.SEND")) {
             if (type.equals("text/plain")) {
@@ -77,17 +81,14 @@ MainActivity extends AppCompatActivity {
         type = intent.getType();
         action = intent.getAction();
 
-
         System.out.println("--Tipo del intent: " + type);
         System.out.println("--Acción del intent: " + action);
-
-
-
-
     }
 
     /**
+     *
      * Método que realiza una búsqueda en YouTube del contenido que le pasa Shazam
+     * @param search el contenido del texto del intent
      */
     public void YouTubeSearch(String search) {
 
@@ -115,8 +116,21 @@ MainActivity extends AppCompatActivity {
      * @param urlYT enlace de youtube
      */
     public void GetSong (String urlYT) {
+
+        // Cargamos la vista
+        setContentView(R.layout.activity_main);
+        //Asignamos los elementos de la vista
+        webView = (WebView)findViewById(R.id.webview);
+
         urlYT = urlYT.substring("https://youtu.be/".length());
         System.out.println("Vamos a buscar la canción con ID: " + urlYT);
+
+        // Configuramos el webview
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.loadUrl("https://youtubemp3api.com/@api/button/mp3/" + urlYT);
 
     }
 }
