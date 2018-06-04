@@ -1,5 +1,6 @@
 package carlos.talavera.com.project;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -55,9 +56,10 @@ MainActivity extends AppCompatActivity {
             case 1:
                 //
                 System.out.println("Vengo de Youtube");
+                GetSong(intentContent);
                 break;
             case 2:
-                //
+                YouTubeSearch(intentContent);
                 System.out.println("Vengo de Shazam");
                 break;
             case 0:
@@ -81,6 +83,40 @@ MainActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+    /**
+     * Método que realiza una búsqueda en YouTube del contenido que le pasa Shazam
+     */
+    public void YouTubeSearch(String search) {
+
+        // Extraemos el texto con el título y el autor
+        search = search.substring("He usado Shazam para descubrir ".length(),search.indexOf("https://"));
+        System.out.println("Buscando " + search);
+
+        Intent intent = new Intent(Intent.ACTION_SEARCH);
+        intent.setPackage("com.google.android.youtube");
+        //la cadena a buscar
+        intent.putExtra("query", search);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try
+        {
+            startActivity(intent);
+        }
+        catch (ActivityNotFoundException e)
+        {
+            //la app no está instalada, mostrar por ejemplo un AlertDialog
+        }
+    }
+
+    /**
+     * Método que llama a la api de Youtube y muestra los resultados
+     * @param urlYT enlace de youtube
+     */
+    public void GetSong (String urlYT) {
+        urlYT = urlYT.substring("https://youtu.be/".length());
+        System.out.println("Vamos a buscar la canción con ID: " + urlYT);
 
     }
 }
